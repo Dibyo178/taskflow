@@ -1,112 +1,36 @@
 # TaskFlow
 
-A lightweight task management system built as part of the Qtec Solution Limited Full Stack Laravel Developer assessment. The application allows teams to create, organize, and track tasks with status progression, priority levels, and deadline management — all within a clean, responsive interface.
+A task management system built for the Qtec Solution Limited Full Stack Laravel Developer assessment. The application enables teams to create, organize, and track daily work through a clean dashboard interface with status progression, priority levels, and deadline management.
+
+**Live Demo:** https://taskflow.sourovdev.space
 
 ---
 
-## Table of Contents
+## Technologies Used
 
-- [Tech Stack](#tech-stack)
-- [Features](#features)
-- [Project Structure](#project-structure)
-- [Getting Started](#getting-started)
-- [Running Tests](#running-tests)
-- [Testing Strategy](#testing-strategy)
-- [Design Decisions](#design-decisions)
-
----
-
-## Tech Stack
-
-- **Framework** — Laravel 11 (PHP 8.2+)
-- **Templating** — Blade
-- **Styling** — Custom CSS (no build pipeline required)
-- **Database** — MySQL 8
-- **Testing** — PHPUnit via Laravel's test suite
-- **Typography** — Syne + DM Sans via Google Fonts
-
----
-
-## Features
-
-- Full task CRUD with form validation
-- Three-stage status flow: Pending → In Progress → Completed
-- Priority tagging: Low, Medium, High
-- Due date support with automatic overdue detection
-- Quick status updates from the task detail view
-- Title search with status and priority filtering
-- Paginated task grid (9 per page)
-- Summary dashboard with live task counts
-- Flash notifications with auto-dismiss
-- Mobile-responsive layout
-
----
-
-## Project Structure
-
-```
-taskflow/
-├── app/
-│   ├── Http/
-│   │   ├── Controllers/
-│   │   │   └── TaskController.php          # Handles all task-related HTTP requests
-│   │   └── Requests/
-│   │       ├── StoreTaskRequest.php         # Validation rules for task creation
-│   │       └── UpdateTaskRequest.php        # Validation rules for task updates
-│   └── Models/
-│       └── Task.php                         # Task model with scopes and accessors
-│
-├── database/
-│   ├── factories/
-│   │   └── TaskFactory.php                  # Fake data generation for tests and seeding
-│   ├── migrations/
-│   │   └── xxxx_xx_xx_create_tasks_table.php
-│   └── seeders/
-│       └── DatabaseSeeder.php               # Seeds 18 demo tasks on fresh install
-│
-├── resources/
-│   └── views/
-│       ├── layouts/
-│       │   └── app.blade.php                # Shared layout: sidebar, topbar, alerts
-│       └── tasks/
-│           ├── index.blade.php              # Dashboard with stats, filters, task grid
-│           ├── create.blade.php             # New task form
-│           ├── edit.blade.php               # Edit task form
-│           └── show.blade.php               # Task detail with quick status controls
-│
-├── routes/
-│   └── web.php                              # Application route definitions
-│
-├── tests/
-│   ├── Feature/
-│   │   └── TaskControllerTest.php           # End-to-end HTTP tests
-│   └── Unit/
-│       ├── TaskModelTest.php                # Isolated model logic tests
-│       └── StoreTaskRequestTest.php         # Form validation rule tests
-│
-├── .env.example
-├── composer.json
-└── README.md
-```
-
----
-
-## Getting Started
-
-### Prerequisites
-
-Ensure the following are available on your system before proceeding.
-
-| Requirement | Version |
+| Layer | Technology |
 |---|---|
-| PHP | 8.2 or higher |
-| Composer | 2.x |
-| MySQL | 8.x |
-| Git | Any recent version |
+| Language | PHP 8.2+ |
+| Framework | Laravel 11 |
+| Templating | Blade |
+| Styling | Vanilla CSS with CSS custom properties |
+| Database | MySQL 8 |
+| ORM | Eloquent |
+| Testing | PHPUnit (via Laravel) |
+| Typography | Syne + DM Sans (Google Fonts) |
 
-> **Windows users:** [XAMPP](https://www.apachefriends.org) is the quickest way to get PHP and MySQL running locally. Install Composer separately afterward.
+No front-end build tools (Node.js, Vite, Webpack) are required. The project runs with Composer alone.
 
 ---
+
+## Setup Instructions
+
+### Requirements
+
+- PHP 8.2 or higher
+- Composer 2.x
+- MySQL 8.x
+- Git
 
 ### Installation
 
@@ -123,7 +47,7 @@ cd taskflow
 composer install
 ```
 
-**3. Set up environment file**
+**3. Create the environment file**
 
 ```bash
 cp .env.example .env
@@ -132,7 +56,7 @@ php artisan key:generate
 
 **4. Configure the database**
 
-Open `.env` and update the database section:
+Open `.env` and set your database credentials:
 
 ```env
 DB_CONNECTION=mysql
@@ -143,56 +67,41 @@ DB_USERNAME=root
 DB_PASSWORD=
 ```
 
-Create the `taskflow` database in MySQL before the next step. If using XAMPP, this can be done via [phpMyAdmin](http://localhost/phpmyadmin).
+Create a database named `taskflow` in MySQL before the next step.
 
-**5. Run migrations and seed demo data**
+**5. Run migrations**
 
 ```bash
 php artisan migrate
+```
+
+**6. Seed demo data** *(optional)*
+
+```bash
 php artisan db:seed
 ```
 
-This creates the `tasks` table and inserts 18 sample tasks across different statuses and priorities.
+This inserts 18 sample tasks across different statuses and priorities so the dashboard is populated immediately.
 
-**6. Start the development server**
+**7. Start the development server**
 
 ```bash
 php artisan serve
 ```
 
-The application will be available at **http://127.0.0.1:8000**.
+Visit **http://127.0.0.1:8000** in your browser.
 
 ---
 
 ## Running Tests
 
-The development server must remain running in one terminal. Open a **second terminal** for test commands.
-
-**Run the full test suite**
+Open a **second terminal window** while `php artisan serve` is running in the first, then execute:
 
 ```bash
 php artisan test
 ```
 
-**Run only feature tests**
-
-```bash
-php artisan test --testsuite=Feature
-```
-
-**Run only unit tests**
-
-```bash
-php artisan test --testsuite=Unit
-```
-
-**Run a single test class**
-
-```bash
-php artisan test tests/Feature/TaskControllerTest.php
-```
-
-**Expected output**
+**Expected output:**
 
 ```
 PASS  Tests\Unit\StoreTaskRequestTest
@@ -204,43 +113,39 @@ Tests: 23 passed
 
 ---
 
-## Testing Strategy
+## Assumptions and Decisions
 
-The test suite is organized into three layers, each targeting a different concern.
+**No authentication**
+The brief described a task management system for a team — not a multi-user platform with individual accounts. Authentication was excluded to stay within the assessed scope. Laravel Breeze could be added with minimal changes if user ownership is required.
 
-**Feature Tests — TaskControllerTest**
+**Vanilla CSS over a framework**
+Tailwind CSS and Bootstrap both require a Node.js compilation step. Using plain CSS with custom properties means the project runs with `composer install` alone — no additional tooling, no build step, no version conflicts.
 
-These tests make real HTTP requests against the full application stack and verify end-to-end behavior from route through to database state. They cover the complete task lifecycle: listing, filtering, searching, creating, viewing, editing, status patching, and deletion — including edge cases such as 404 responses and validation failures.
-
-**Model Unit Tests — TaskModelTest**
-
-These tests exercise the Task model in isolation from the HTTP layer. They verify that query scopes (`byStatus`, `byPriority`, `overdue`) return the correct records, that computed properties (`isOverdue`, `statusBadgeClass`) produce the right values, and that date casting behaves as expected.
-
-**Validation Unit Tests — StoreTaskRequestTest**
-
-These tests instantiate the `StoreTaskRequest` form request class directly and run the validator against a range of inputs. This allows thorough coverage of validation rules — required fields, enum constraints, past date rejection — without the overhead of full HTTP dispatching.
-
-This structure keeps each concern independently testable. Model bugs surface in unit tests before feature tests are reached, which makes failures faster to diagnose and fix.
-
----
-
-## Design Decisions
-
-**Dedicated Form Request classes**
-All input validation is handled through `StoreTaskRequest` and `UpdateTaskRequest` rather than inline controller logic. This keeps controllers focused on orchestration and makes validation rules independently testable.
+**Form Request classes for validation**
+Input validation lives in `StoreTaskRequest` and `UpdateTaskRequest` rather than inline in the controller. This keeps the controller thin, makes the validation rules explicit, and allows them to be tested independently without going through HTTP.
 
 **Business logic on the model**
-Computed properties such as `isOverdue` and query scopes such as `scopeOverdue` live on the `Task` model rather than in controllers or views. This avoids duplication, keeps the model cohesive, and makes the logic straightforward to unit test.
+Computed properties such as `isOverdue` and query scopes such as `scopeOverdue` are defined on the `Task` model. Centralizing logic here avoids duplication across controllers and views, and makes it straightforward to test in isolation.
 
-**No front-end build pipeline**
-The interface is built with plain CSS using custom properties. This removes the need for Node.js or any asset compilation step — `composer install` followed by `php artisan serve` is sufficient to run the project locally.
-
-**Authentication excluded**
-The assessment scope was focused on task management. Authentication was deliberately omitted to stay within the time frame and keep the codebase concentrated on the areas being evaluated. Laravel Breeze could be layered in with minimal changes.
-
-**In-memory SQLite for tests**
-The `phpunit.xml` environment is configured to use an in-memory SQLite database. Tests run against a clean, isolated state on every execution and never touch the local MySQL database.
+**File-based session and cache drivers**
+The default Laravel configuration uses database-backed sessions and cache, which requires additional migration tables. These were switched to `file` to reduce setup friction. For a production deployment with multiple servers, a shared driver such as Redis would be more appropriate.
 
 ---
 
-*Submitted for Qtec Solution Limited — Full Stack Laravel Developer Assessment — 2026*
+## Testing Approach
+
+The test suite is organized into three layers.
+
+**Feature tests — `tests/Feature/TaskControllerTest.php`**
+
+These tests dispatch real HTTP requests through the full application stack and assert on responses and database state. They cover the complete task lifecycle: listing with filters and search, creating, viewing, editing, quick-status patching via PATCH, and deletion. Edge cases such as 404 responses for missing records and validation rejections are also covered.
+
+**Model unit tests — `tests/Unit/TaskModelTest.php`**
+
+These tests exercise the `Task` model directly, without involving routes or controllers. They verify that query scopes return the correct records, that the `isOverdue` accessor behaves correctly across different status and date combinations, that badge class accessors return the expected CSS class strings, and that the `due_date` field is cast to a Carbon instance.
+
+**Validation unit tests — `tests/Unit/StoreTaskRequestTest.php`**
+
+These tests instantiate the `StoreTaskRequest` form request class and run the Laravel validator against a range of inputs. Covered cases include the required title field, enum constraints on status and priority, and the rejection of past due dates. Testing validation this way avoids the overhead of full HTTP dispatching while still exercising the exact rules the application enforces.
+
+The rationale for this structure is that each layer catches a distinct class of bug. Validation errors surface in unit tests, model logic errors surface in model tests, and integration errors surface in feature tests — making failures faster to locate and fix.
